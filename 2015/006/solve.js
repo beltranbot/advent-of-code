@@ -1,6 +1,6 @@
 function solve1 (n) {
   n = n.split('\r\n')
-  let grid = [...Array(1000)].map(x => [...Array(1000)].map(y => 0))  
+  let grid = [...Array(1000)].map(x => [...Array(1000)].map(y => 0))
   
   for (const line of n) {
     let ins = line.split(' ')
