@@ -50,4 +50,4 @@ function solve2 (n) {
   return grid.map(x => x.reduce((a, c) => a + c))
     .reduce((a, c) => a + c)
 }
-module.exports = { solve1, solve2 } 
+module.exports = { solve1, solve2 }
