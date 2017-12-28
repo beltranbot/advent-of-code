@@ -1,4 +1,4 @@
-// tried to solve the traveler salesperson probelm using a minimum reach tree
+// tried to solve the traveler salesperson probelm using a minimum spanning tree
 // don't look at this
 function allNodesConnected (obj) {
   let val = true
