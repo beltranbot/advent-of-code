@@ -20,7 +20,6 @@ function main2 (data) {
 
   var root_name = ''
 
-
   while (true) {
     for (var i = 0; i < arrs.length; i++) {
       console.log('searching...', arrs[i][0])
@@ -51,10 +50,6 @@ function main2 (data) {
     }
     return false
   }
-
-  
-
-  // console.log(candidates)
 }
 
 function Node (name, weight) {
