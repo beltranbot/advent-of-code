@@ -5,13 +5,13 @@ function solve1(input) {
 
 function solve2(input) {
   input = input.split('\n').map(x => +x)
-  let frecuencies = {}
+  let frecuencies = new Set
   let ans = 0
   while (true) {
     for (let i = 0; i < input.length; i++) {
       ans += input[i]
-      if (!frecuencies[ans]) {
-        frecuencies[ans] = true
+      if (!frecuencies.has(ans)) {
+        frecuencies.add(ans)
       } else {
         return ans
       }
