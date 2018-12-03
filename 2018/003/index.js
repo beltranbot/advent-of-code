@@ -2,8 +2,8 @@ let fs = require('fs')
 const path = require('path')
 const { solve1, solve2 } = require('./solve')
 
-// const filename = 'input.txt'
-const filename = 'test-input.txt'
+const filename = 'input.txt'
+// const filename = 'test-input.txt'
 
 const input = fs.readFileSync(path.join(__dirname, filename), {
   encoding: 'utf-8'

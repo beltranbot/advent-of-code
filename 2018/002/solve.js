@@ -24,43 +24,29 @@ function solve1(input) {
 
 function solve2(input) {
   input = input.split('\n')
+  let seenIds = new Set
 
   for (let i = 0; i < input.length; i++) {
     let line = input[i]
-    let obj1 = buildObj(line)
+    let localIds = new Set
 
-    for (let j = 0; j < input.length; j++) {
-      if (i === j) {
-        continue
+    for (let j = 0; j < line.length; j++) {
+      let id = [...line]
+      id.splice(j, 1)
+      id = id.join('')
+      localIds.add(id)
+    }
+
+    for (let id of localIds) {
+      if (seenIds.has(id)) {
+        return id
+      } else {
+        seenIds.add(id)
       }
-
-      let line = input[j]
-      let obj2 = buildObj(line)
-      let diff = 0
-
-      for (const key in obj2) {
-        if (obj2[key] !== obj1[key]) {
-          diff++
-        }
-        if (diff > 1) {
-          break
-        }
-      }
-
-      if (diff > 1) {
-        continue
-      }
-
-      let ans = ''
-      for (let k = 0; k < input[i].length; k++) {
-        if (input[i][k] === input[j][k]) {
-          ans += input[i][k]
-        }
-      }
-
-      return ans
     }
   }
+
+  return 'not found'
 }
 
 module.exports = {
