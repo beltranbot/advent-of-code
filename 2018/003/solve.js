@@ -18,7 +18,8 @@ function makefile(arr) {
 
 function solve1(input) {
   input = input.split('\n')
-  let arr = [...Array(1000)].map(x => Array(1000))
+  let size = 50000
+  let arr = [...Array(size)].map(x => Array(size))
   let countx = 0
   for (const line of input) {
     let regex = /#(\d*) @ (\d*),(\d*): (\d*)x(\d*)/g
@@ -29,29 +30,29 @@ function solve1(input) {
     height = +height
 
     for (let row = 0; row < height; row++) {
-      
+
       for (let col = 0; col < width; col++) {
         let mark = id
         if (arr[y + row][x + col]) {
+          countx += arr[y + row][x + col] === 'X' ? 0 : 1
           mark = 'X'
         }
         arr[y + row][x + col] = mark
-        
+
       }
     }
   }
 
-  for (const line of arr) {
-    countx += line.filter(x => x === 'X').length
-  }
-  makefile(arr)
+  // makefile(arr)
   return countx
 }
 
 function solve2(input) {
   input = input.split('\n')
-  let arr = [...Array(1000)].map(x => Array(1000))
+  let size = 50000
+  let arr = [...Array(size)].map(x => Array(size))
 
+  let ids = {}
   for (const line of input) {
     let regex = /#(\d*) @ (\d*),(\d*): (\d*)x(\d*)/g
     let [, id, x, y, width, height] = regex.exec(line)
@@ -60,36 +61,26 @@ function solve2(input) {
     width = +width
     height = +height
 
+    ids[id] = true
+
     for (let row = 0; row < height; row++) {
-      
+
       for (let col = 0; col < width; col++) {
         let mark = id
         if (arr[y + row][x + col]) {
+          ids[arr[y + row][x + col]] = false
+          ids[id] = false
           mark = 'X'
         }
+
         arr[y + row][x + col] = mark
-        
+
       }
     }
   }
 
-  check:
-  for (const line of input) {
-    let regex = /#(\d*) @ (\d*),(\d*): (\d*)x(\d*)/g
-    let [t, id, x, y, width, height] = regex.exec(line)
-    y = +y
-    x = +x
-    width = +width
-    height = +height
-
-    for (let row = 0; row < height; row++) {      
-      for (let col = 0; col < width; col++) {
-        if (arr[y + row][x + col] === 'X') {
-          continue check
-        }
-      }
-    }
-    return id
+  for (const id in ids) {
+    if (ids[id]) return id
   }
 
 }
