@@ -1,38 +1,37 @@
 function solve1(input) {
-  input = [...input]
-  let i = 0
-  let j = 1
-  while (true) {
-    let a = input[i]
-    let b = input[j]
+  let output = []
 
-    if (a.toLowerCase() === b.toLowerCase()) {
-      if (a !== b) {
-        input.splice(i, 2)
-        i = 0
-        j = 1
-        continue
-      }
+  for (let i = 0; i < input.length; i++) {
+    if (output.length === 0) {
+      output.push(input[i])
+      continue
     }
-    i++
-    j++
-    if (j >= input.length) break
+
+    let a = output[output.length - 1]
+    let b = input[i]
+
+    if (a.toLowerCase() === b.toLowerCase() && (a !== b)) {
+      output.pop()
+      continue
+    }
+
+    output.push(input[i])
   }
-  return input.join('').length
+
+  return output.length
 }
 
 function solve2(input) {
-  const abc = [...'abcdefghijklmnopqrstuvwxyz']
-  let lengths = []
+  let arr_lens = []
+  const letters = [...'abcdefghijklmnopqrstuvwxyz']
 
-  for(const letter of abc) {
-    console.log('letter', letter)
-    let arr = [...input].filter(x => x.toLowerCase() != letter).join('')
-    lengths.push(solve1(arr))
+  for (const letter of letters) {
+    let regex = new RegExp('[' + letter + letter.toUpperCase() + ']', 'g')
+    let temp_input = input.replace(regex, '')
+    arr_lens.push(solve1(temp_input))
   }
 
-  return Math.min(...lengths)
-
+  return Math.min(...arr_lens)
 }
 
 module.exports = {
