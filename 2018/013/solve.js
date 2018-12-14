@@ -1,6 +1,5 @@
 let fs = require('fs')
 const path = require('path')
-const prompts = require('prompts')
 
 
 function writeOutput(output) {
@@ -116,26 +115,17 @@ function getCarts(matrix) {
   return carts
 }
 
-function sortCarts(carts) {
-  return carts.sort((a, b) => {
-    if (a.row < b.row) {
-      return a
-    } else if (a.col < b.col) {
-      return b
-    }
-    return a
-  })
-}
-
-function checkCollisions(carts, a) {
-  for (const b of carts) {
-    if (a.id === b.id) continue
-
-    if (a.row === b.row && a.col === b.col) {
-      return true
-    }
+function sortCarts(a, b) {
+  if (a.row > b.row) {
+    return -1
+  } else if (b.row > a.row) {
+    return 1
+  } else if (a.col > b.col) {
+    return -1
+  } else if (b.col > a.col) {
+    return 1
   }
-  return false
+  return 0
 }
 
 function checkCollisions2(carts) {
@@ -164,40 +154,6 @@ function checkCollisions2(carts) {
   return false
 }
 
-function checkCollisions3(carts) {
-  for (const a of carts) {
-    if (a.flag_crash) {
-      a.crashed = true
-      continue
-    }
-    for (const b of carts) {
-      if (a.id === b.id) continue
-
-      if (a.row === b.row && a.col === b.col) {
-        a.crashed = true
-        b.crashed = true
-        continue
-      }
-      let look_ahead_a = {}
-      let step_a = STEPS[a.dir]
-      look_ahead_a['row'] = a.row + step_a.row
-      look_ahead_a['col'] = a.col + step_a.col
-      let look_ahead_b = {}
-      let step_b = STEPS[b.dir]
-      look_ahead_b['row'] = b.row + step_b.row
-      look_ahead_b['col'] = b.col + step_b.col
-      let check_1 = look_ahead_a.row === b.row && look_ahead_a.col === b.col
-      let check_2 = look_ahead_b.row === a.row && look_ahead_b.col === a.col
-      if (check_1 && check_2) {
-        a.flag_crash = true
-        b.flag_crash = true
-        continue
-      }
-    }
-  }
-  return false
-}
-
 function removeCollisions(carts) {
   for (let i = carts.length - 1; i >= 0; i--) {
     if (carts[i].crashed) {
@@ -212,7 +168,7 @@ function solve1(input) {
   let loops = 0
 
   while (true) {
-    // console.log(carts)
+
     for (let cart of carts) {
       let step = STEPS[cart.dir]
       cart.row += step.row
@@ -234,21 +190,33 @@ function solve1(input) {
           break
       }
     }
-    // console.log(carts[0].row, carts[0].col)
 
-    // printOutput(matrix, carts, loops)
     if (cart = checkCollisions2(carts)) {
       console.log('loops:', loops)
       return `${cart.col},${cart.row}`
-      break
     }
 
-    carts = sortCarts(carts)
+    carts.sort(sortCarts)
     loops++
   }
 
 
   return null
+
+}
+
+function checkCollisions4(carts, a) {
+  for(const b of carts) {
+    if(a.id === b.id) continue
+    if (b.crashed) continue
+    if (a.row === b.row && a.col === b.col) {
+      a.crashed = true
+      b.crashed = true
+      return true
+    }
+  }
+
+  return false
 }
 
 function solve2(input) {
@@ -256,11 +224,17 @@ function solve2(input) {
   let carts = getCarts(matrix)
   let loops = 0
 
-  // printOutput(matrix, carts, loops)
   while (true) {
+    carts.sort(sortCarts)
 
+    for (let i = carts.length - 1; i >= 0 ; i--) {
 
-    for (let cart of carts) {
+      let cart = carts[i]
+      if (cart.crashed) {
+        carts.splice(i, 1)
+        continue
+      }
+
       let step = STEPS[cart.dir]
       cart.row += step.row
       cart.col += step.col
@@ -280,15 +254,13 @@ function solve2(input) {
         default:
           break
       }
+
+      if (checkCollisions4(carts, cart)) {
+        carts.splice(i, 1)
+      }
     }
-    // printOutput(matrix, carts, loops)
 
-    checkCollisions3(carts)
     removeCollisions(carts)
-
-    // if (carts.length === 3) {
-    //   console.log(carts)
-    // }
 
     if (carts.length === 1) {
       console.log('loops', loops)
@@ -299,7 +271,6 @@ function solve2(input) {
       return 'no carts left'
     }
 
-    // carts = sortCarts(carts)
     loops++
   }
 
