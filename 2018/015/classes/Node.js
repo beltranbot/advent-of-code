@@ -14,10 +14,7 @@ class Node {
     this.unit = unit
   }
 
-  isWall(enemy) {
-    if (this.row === enemy.row && this.col === enemy.col)  {
-      return false
-    }
+  isWall() {
     return ['#', 'E', 'G'].includes(this.value)
   }
 

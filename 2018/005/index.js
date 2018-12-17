@@ -4,6 +4,8 @@ const { solve1, solve2 } = require('./solve')
 
 const filename = 'input.txt'
 // const filename = 'test-input.txt'
+// const filename = 'test-input07.txt' //189910 57820
+// const filename = 'test-input08.txt' //245280 74984
 
 const input = fs.readFileSync(path.join(__dirname, filename), {
   encoding: 'utf-8'
