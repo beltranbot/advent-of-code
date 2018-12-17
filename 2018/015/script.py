@@ -117,7 +117,8 @@ class Grid(dict):
 
         return closest
 
-lines = open('2018/015/input.txt').read().splitlines()
+# lines = open('2018/015/input.txt').read().splitlines()
+lines = open('2018/015/test-input09.txt').read().splitlines()
 
 grid = Grid(lines)
 

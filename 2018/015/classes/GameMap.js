@@ -130,10 +130,14 @@ class GameMap {
     let output = ''
 
     for (let row = 0; row < this.gameMap.length; row++) {
+      let tail = ''
       for (let col = 0; col < this.gameMap[row].length; col++) {
         output += this.gameMap[row][col].value
+        if (['G', 'E'].includes(this.gameMap[row][col].value)) {
+          tail += ` ${this.gameMap[row][col].value}(${this.gameMap[row][col].unit.hp})`
+        }
       }
-      output += '\n'
+      output += tail + '\n'
     }
 
     console.log(output)
