@@ -4,7 +4,7 @@ const { solve1, solve2 } = require('./solve')
 
 // const filename = 'input.txt'
 // const filename = 'test-input01.txt'
-// const filename = 'test-input02.txt'
+// const filename = 'test-input10.txt'
 const filename = process.argv[2]
 
 const input = fs.readFileSync(path.join(__dirname, filename), {

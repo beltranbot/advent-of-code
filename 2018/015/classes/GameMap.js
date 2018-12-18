@@ -11,7 +11,7 @@ class GameMap {
     this.NEIGHBORS = [
       [-1, 0],
       [0, 1],
-      [1, 0],
+      [1, 0], 
       [0, -1],
     ]
     this.turns = 1
@@ -100,9 +100,21 @@ class GameMap {
         if (n.value !== '.') continue
         enemy_neighbors.push(n)
       }
+      let unit_neighbors = []
+      for (let neighbor of this.NEIGHBORS) {
+        let n = {}
+        n.row = unit.row + neighbor[0]
+        n.col = unit.col + neighbor[1]
+        n.value = this.gameMap[n.row][n.col].value
+        if (n.value !== '.') continue
+        unit_neighbors.push(n)
+      }
 
       for (let enemy_neighbor of enemy_neighbors) {
-        distances.push(this.pathFinder(unit, enemy_neighbor))
+        for (let unit_neighbor of unit_neighbors) {
+          let distance = this.pathFinder(unit_neighbor, enemy_neighbor)
+          distances.push(distance)
+        }
       }
     }
 
@@ -114,15 +126,15 @@ class GameMap {
       return -1
     } else if (b.g < a.g) {
       return 1
-    } else if (a.row < b.row) {
+    } else if (a.start.row < b.start.row) {
       return -1
-    } else if (b.row < a.row) {
+    } else if (b.start.row < a.start.row) {
       return 1
-    } else if (a.col < b.col) {
+    } else if (a.start.col < b.start.col) {
       return -1
-    } else if (b.col < a.col) {
+    } else if (b.start.col < a.start.col) {
       return 1
-    }
+    } 
     return 0
   }
 
@@ -205,11 +217,7 @@ class GameMap {
     if (distances.length > 1) {
       distances.sort(this.sortDistances)
     }
-
-    let move = distances.shift()
-    while (move.previous.previous !== null) {
-      move = move.previous
-    }
+    let move = distances.shift().start
 
     this.gameMap[unit.row][unit.col].value = '.'
     this.gameMap[unit.row][unit.col].unit = null
@@ -225,7 +233,6 @@ class GameMap {
   mapScore() {
     let score = 0
     for (const unit of this.units) {
-      // console.log(unit, unit.hp)
       if (unit.hp <= 0) continue
       score += unit.hp
     }
@@ -234,8 +241,6 @@ class GameMap {
   }
 
   step() {
-    
-    // console.log('turn', this.turns)
     this.printGameMap()
     if (this.goblins <= 0 || this.elves <= 0) {
       this.turns--
@@ -266,7 +271,6 @@ class GameMap {
     this.printGameMap()
     this.removeFallenUnits()
     if (this.goblins <= 0 || this.elves <= 0) {
-      // console.log('or here')
       return this.mapScore()
     }
     
@@ -337,8 +341,23 @@ class GameMap {
       } // end for
     } // end while
 
-    // return !route ? false : route.g
-    return !route ? false : route
+    let ans = !route ? false : {start, g: route.g}
+
+    for (let node of closed_set) {
+      node.f = 0
+      node.g = 0
+      node.h = 0
+      node.previous = null
+    }
+
+    for (let node of open_set) {
+      node.f = 0
+      node.g = 0
+      node.h = 0
+      node.previous = null
+    }
+
+    return ans
   }
 }
 
