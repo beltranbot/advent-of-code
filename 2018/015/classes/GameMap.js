@@ -2,7 +2,7 @@ const { Node } = require('./Node')
 const { Unit } = require('./Unit')
 
 class GameMap {
-  constructor(input) {
+  constructor(input, elvesAttack) {
     this.units = []
     this.gameMap = null
     this.previousTurnMap = null
@@ -14,6 +14,7 @@ class GameMap {
       [1, 0], 
       [0, -1],
     ]
+    this.elvesAttack = elvesAttack
     this.turns = 1
     this.buildGameMap(input)
   }
@@ -39,7 +40,7 @@ class GameMap {
               col,
               type,
               hp: 200,
-              atk: 3
+              atk: type === 'G' ? 3 : this.elvesAttack
             })
             id++
             this.addUnit(unit)
@@ -64,6 +65,7 @@ class GameMap {
     }
 
     this.setMap(matrix)
+    this.totalElves = this.elves
   }
 
   setMap(gameMap) {
@@ -236,13 +238,14 @@ class GameMap {
       if (unit.hp <= 0) continue
       score += unit.hp
     }
-    console.log(this.turns, score)
-    return this.turns * score
+    console.log('score', this.turns, score)
+    return {score: this.turns * score, winner: this.units[0].type}
   }
 
   step() {
-    this.printGameMap()
+    // this.printGameMap()
     if (this.goblins <= 0 || this.elves <= 0) {
+      if (this.elvesAttack !== 3 && this.totalElves !== this.elves) return {fallenElves: true}
       this.turns--
       return this.mapScore()
     }
@@ -257,6 +260,7 @@ class GameMap {
       let enemies = this.units.filter(unit => unit.type === enemy && unit.hp > 0)
 
       if (enemies.length === 0) {
+        if (this.elvesAttack !== 3 && this.totalElves !== this.elves) return {fallenElves: true}
         this.turns--
         return this.mapScore()
       }
@@ -268,8 +272,9 @@ class GameMap {
       }
     }
     // console.log(this.units)
-    this.printGameMap()
+    // this.printGameMap()
     this.removeFallenUnits()
+    if (this.elvesAttack !== 3 && this.totalElves !== this.elves) return {fallenElves: true}
     if (this.goblins <= 0 || this.elves <= 0) {
       return this.mapScore()
     }
