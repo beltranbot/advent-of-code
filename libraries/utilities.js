@@ -1,3 +1,6 @@
+let fs = require('fs')
+const path = require('path')
+
 function cloneMatrix(matrix) {
   let new_matrix = []
   for (let row = 0; row < matrix.length; row++) {
@@ -22,7 +25,15 @@ function buildObj (line) {
   return obj
 }
 
+function writeOutput(output, dir = './js_output.txt') {
+  fs.writeFile(path.join(__dirname, dir), output, function (err) {
+    if (err) return console.log(err)
+    console.log("finished")
+  })
+}
+
 module.exports = {
   cloneMatrix,
   buildObj,
+  writeOutput
 }

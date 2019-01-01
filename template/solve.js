@@ -1,4 +1,4 @@
-function solve1() {
+function solve1(input) {
 
 }
 
