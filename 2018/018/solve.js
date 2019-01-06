@@ -86,6 +86,29 @@ function checkNeighbors(matrix, { row, col }) {
   return neighbors
 }
 
+function areTheSame(a, b) {
+  for (let row = 0; row < a.length; row++) {
+    for (let col = 0; col < a[row].length; col++) {
+      if (a[row][col] !== b[row][col]) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
+
+function includeMatrix(matrices, m) {
+  for (const matrix of matrices) {
+    if (areTheSame(matrix, m)) {
+      return true
+    }
+  }
+  matrices.push([...m])
+  return false
+
+}
+
 function solve1(input, n = 10) {
   let matrix = buildMatrix(input)
 
@@ -134,7 +157,7 @@ function solve1(input, n = 10) {
 
     matrix = new_matrix
 
-    printMatrix(matrix)
+    // printMatrix(matrix)
 
   } // end while
 
@@ -149,14 +172,14 @@ function solve2(input, n = 1000) {
 
   let i = 0
 
-  let output = ''
-
-  let totals = [0]
+  let totals = []
   let match_total = 0
   let acres = []
+  let matrices = []
+
+  let output = ''
 
   while (i++ < n) {
-    // console.log(i)
     let new_matrix = []
 
 
@@ -200,29 +223,26 @@ function solve2(input, n = 1000) {
 
     acres.push(new_matrix)
 
-    // output += getOutput(i, matrix) + '\n'
+    output += getOutput(i, matrix) + '\n'
 
     let wooded = matrix.reduce((a, c) => a + c.filter(x => x === TREES).length, 0)
     let lumberjacks = matrix.reduce((a, c) => a + c.filter(x => x === LUMBERJACK).length, 0)
-    let total = wooded * lumberjacks
-    if (totals.includes(total)) {
+    let total = `wooded: ${wooded}, lumberjacks: ${lumberjacks}, total: ${wooded * lumberjacks}`
+    if (includeMatrix(matrices, matrix)) {
       match_total = total
       break
-    } else {
-      totals.push(total)
     }
+    totals.push(total)
 
   } // end while
 
-  let index = totals.indexOf(match_total)
+  writeOutput(output)
 
-  let loop_length = i - index
+  let loop_start = totals.indexOf(match_total)
+  let loop_length = i - loop_start - 1
+  let index = (loop_start - 1) + (1000000000 - loop_start) % loop_length
 
-  // console.log(i, index);
-
-  let index_2 = index + (1000000000 % loop_length)
-
-  let acre = acres[index_2 -2]
+  let acre = matrices[index]
 
   let wooded = acre.reduce((a, c) => a + c.filter(x => x === TREES).length, 0)
   let lumberjacks = acre.reduce((a, c) => a + c.filter(x => x === LUMBERJACK).length, 0)
