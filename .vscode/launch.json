@@ -19,5 +19,12 @@
             "program": "${workspaceFolder}/2018/018/index.js",
             "args": []
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch 2019/003",
+            "program": "${workspaceFolder}/2019/003/index.js",
+            "args": []
+        },
     ]
 }
