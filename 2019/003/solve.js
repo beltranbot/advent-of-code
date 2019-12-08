@@ -90,9 +90,3 @@ module.exports = {
     solve1,
     solve2
 }
-
-
-/**
- * 
- * try to solve using a hash to store coordinates instead of a grid
- */
