@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    
 
         {
             "type": "node",
@@ -24,6 +25,13 @@
             "request": "launch",
             "name": "Launch 2019/003",
             "program": "${workspaceFolder}/2019/003/index.js",
+            "args": []
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch 2019/005",
+            "program": "${workspaceFolder}/2019/005/index.js",
             "args": []
         },
     ]
