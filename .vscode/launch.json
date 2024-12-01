@@ -19,5 +19,15 @@
             "program": "${workspaceFolder}/2018/018/index.js",
             "args": []
         },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${fileDirname}",
+            "purpose": ["debug-in-terminal"]
+        }
     ]
 }
