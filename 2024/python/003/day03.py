@@ -11,16 +11,15 @@ class Day03:
 
     def process_file(self):
         total = 0
-        with open(self.filename) as file:
-            for line in file:
-                line = line.strip()
-                regexp = r'mul\(\d{1,3},\d{1,3}\)'
-                results = re.findall(regexp, line)
-                for op in results:
-                    regexp = r'mul\((\d{1,3}),(\d{1,3})\)'
-                    [n1, n2] = list(
-                        map(lambda x: int(x), re.search(regexp, op).groups()))
-                    total += n1 * n2
+        # read whole file
+        data = open(self.filename).read()
+        regexp = r'mul\(\d{1,3},\d{1,3}\)'
+        results = re.findall(regexp, data)
+        for op in results:
+            regexp = r'mul\((\d{1,3}),(\d{1,3})\)'
+            [n1, n2] = list(
+                map(lambda x: int(x), re.search(regexp, op).groups()))
+            total += n1 * n2
 
         return total
 
@@ -30,6 +29,7 @@ class Day03:
     def process_file2(self):
         total = 0
         enable = True
+        # read line by line
         with open(self.filename) as file:
             for line in file:
                 line = line.strip()
