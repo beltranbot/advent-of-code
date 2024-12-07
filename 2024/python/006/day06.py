@@ -17,6 +17,7 @@ class Day06:
         self.direction = self.directions[self.current_dir]
         self.total = 0
         self.original_guard = None
+        self.route = {}
 
     def silver(self):
         self.process_file()
@@ -51,6 +52,10 @@ class Day06:
             if out_of_bounds:
                 break
 
+            key = (x, y)
+            if key not in self.route:
+                self.route[key] = True
+
             if self.grid[x][y].value == '.' or self.grid[x][y].value == 'X':
                 self.guard = self.grid[x][y]
                 self.guard.mark_as_visited()
@@ -69,49 +74,56 @@ class Day06:
                 self.total += 1 if self.grid[row][col].value == 'X' else 0
 
     def move2(self):
+        self.move()
+        self.reset()
         blocks = 0
 
-        for row, _ in enumerate(self.grid):
-            for col, _ in enumerate(self.grid[row]):
-                self.reset()
-                if self.grid[row][col].value != '.':
-                    continue
+        changed = None
 
-                self.grid[row][col].value = '@'
+        for step in self.route:
+            if changed:
+                changed.value = '.'
 
-                i = 0
-                while True:
-                    i += 1
-                    x = self.guard.x + self.direction[0]
-                    y = self.guard.y + self.direction[1]
-                    out_of_bounds = (
-                        x >= len(self.grid) or y >= len(self.grid[0])
-                        or x < 0 or y < 0
-                    )
-                    if out_of_bounds:
-                        break
+            [row, col] = [step[0], step[1]]
+            if row == self.original_guard.x and col == self.original_guard.y:
+                continue
 
-                    if self.grid[x][y].value == '.' or self.grid[x][y].value == 'X':
-                        self.guard = self.grid[x][y]
-                        self.guard.mark_as_visited()
-                    elif self.grid[x][y].value == '#' or self.grid[x][y].value == '@':
-                        self.rotate()
+            if self.grid[row][col].value != '.' and self.grid[row][col].value != 'X':
+                continue
 
-                    if i >= 10000:
+            self.grid[row][col].value = '@'
+            changed = self.grid[row][col]
+
+            visited = {}
+            while True:
+                x = self.guard.x + self.direction[0]
+                y = self.guard.y + self.direction[1]
+                out_of_bounds = (
+                    x >= len(self.grid) or y >= len(self.grid[0])
+                    or x < 0 or y < 0
+                )
+                if out_of_bounds:
+                    break
+
+                if self.grid[x][y].value == '.' or self.grid[x][y].value == 'X':
+                    key = ((x, y), self.direction)
+                    if key in visited:
                         blocks += 1
                         break
+
+                    self.guard = self.grid[x][y]
+                    visited[key] = True
+                elif self.grid[x][y].value == '#' or self.grid[x][y].value == '@':
+                    self.rotate()
+
+            self.reset()
 
         return blocks
 
     def reset(self):
-        for row, _ in enumerate(self.grid):
-            for col, _ in enumerate(self.grid[row]):
-                self.grid[row][col].reset()
-
         self.current_dir = 0
         self.direction = self.directions[self.current_dir]
         self.guard = self.original_guard
-        self.guard.mark_as_visited()
 
     def print(self):
         for row, _ in enumerate(self.grid):
@@ -143,3 +155,6 @@ print('silver: ', solution)
 day = Day06()
 solution = day.gold()
 print('gold  : ', solution)
+
+# silver: 4964
+# gold  : 1740
